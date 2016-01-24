@@ -7,9 +7,13 @@ var TelegramBot = require('node-telegram-bot-api'),
 var data = {};
 
 function updateRates() {
-    cbrRates().then(function(rates) {
-        data = rates;
-    });
+    try {
+        cbrRates().then(function (rates) {
+            data = rates;
+        });
+    } catch(e) {
+        console.error(e);
+    }
 }
 
 updateRates();
@@ -22,9 +26,13 @@ var token = '';
 // Setup polling way
 var bot = new TelegramBot(token, {polling: true});
 
+bot.getMe().then(function (me) {
+    console.log('Hi my name is %s!', me.username);
+});
+
 // cross rates
 bot.onText(/\/([a-zA-Z]{6})(.+)?/, function (msg, match) {
-    var fromId = msg.from.id;
+    var clientId = msg.from.id;
     var curr = match[1],
         message = '';
     var currencyOne = curr.substr(0, 3),
@@ -37,5 +45,21 @@ bot.onText(/\/([a-zA-Z]{6})(.+)?/, function (msg, match) {
             val2 = currencyTwo == 'rub' ? 1 : data[currencyTwo]['value'];
         message = 'Текущий курс ' + (currencyOne + '/' + currencyTwo).toUpperCase() + ' по Центробанку РФ: ' + (new BN((new BN(val1)).div(new BN(val2)).toFixed(4))).toString();
     }
-    bot.sendMessage(fromId, message);
+    bot.sendMessage(clientId, message);
+});
+
+bot.onText(/\/list/, function (msg, match) {
+    var clientId = msg.from.id;
+    var message = 'В данный момент доступны курсы следующих валют: RUB, ';
+    Object.keys(data).map(function(currency) {
+       message += currency.toUpperCase() + ', '; 
+    });
+    message = message.substring(0, message.length-2);
+    bot.sendMessage(clientId, message);
+});
+
+bot.onText(/\/start/, function (msg, match) {
+    var clientId = msg.from.id;
+    var message = 'Бот предоставляет информацию по текущему курсу ЦБ РФ для различных валют. Чтобы запросить курс введите /%валюта1%%валюта2%. Например /usdrub. Чтобы посмотреть доступный список валют отправьте /list.';
+    bot.sendMessage(clientId, message);
 });
