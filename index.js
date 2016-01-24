@@ -17,7 +17,7 @@ setInterval(function() {
     updateRates();
 }, 10000);
 
-var token = '';
+var token = '178996118:AAHpzIc26ELgzHRYT-YXDeCGxfkYH41cR-c';
 
 // Setup polling way
 var bot = new TelegramBot(token, {polling: true});
