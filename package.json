@@ -1,0 +1,16 @@
+{
+  "name": "investingbot",
+  "version": "0.0.1",
+  "description": "Information about exchange rates",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mike Lounev",
+  "license": "ISC",
+  "dependencies": {
+    "node-telegram-bot-api": "latest",
+    "cbr-rates": "latest",
+    "bignumber.js": "latest"
+  }
+}
