@@ -32,7 +32,7 @@ setInterval(function() {
     updateRates();
 }, 10000);
 
-var token = '';
+var token = '1217766502:AAHEshc_PTgIuENAZsxgB-cSojvDNMmyFEU';
 
 // Setup polling way
 var bot = new TelegramBot(token, {polling: true});
